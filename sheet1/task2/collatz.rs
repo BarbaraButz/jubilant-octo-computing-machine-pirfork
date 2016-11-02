@@ -10,7 +10,7 @@ fn main() {
         } else {
             number = 3 * number + 1;
         }
-        counter = counter + 1;
+        counter += 1;
     }
     println!("{} -> 1", counter);
 }
