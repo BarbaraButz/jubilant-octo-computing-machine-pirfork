@@ -2,7 +2,9 @@ fn main() {
     let mut arr = [61, 21, 27, 79, 57, 60, 46, 42, 27, 92, 66, 26];
 
     sort(&mut arr);
-    println!("{:?}", arr);
+    for i in arr.iter() {
+        println!("{} ", i);
+    }
 }
 
 fn sort(sort_array: &mut [u64]) {
@@ -10,7 +12,7 @@ fn sort(sort_array: &mut [u64]) {
     let mut links = 0;
     while links < n {
         let mut min = links;
-        for i in links+1..n {
+        for i in links+1..n+1 {
             if sort_array[i] < sort_array[min] {
                 min = i;
             }
