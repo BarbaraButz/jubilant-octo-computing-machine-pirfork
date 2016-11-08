@@ -8,19 +8,16 @@ fn main() {
 }
 
 fn sort(sort_array: &mut [u64]) {
-    let n = sort_array.len() - 1;
-    let mut links = 0;
-    while links < n {
-        let mut min = links;
-        for i in links+1..n+1 {
+    for elem in 0..sort_array.len() - 1 {
+        let mut min = elem;
+        for i in elem+1..sort_array.len() {
             if sort_array[i] < sort_array[min] {
                 min = i;
             }
         }
         let temp = sort_array[min];
-        sort_array[min] = sort_array[links];
-        sort_array[links] = temp;
-        links = links +1;
+        sort_array[min] = sort_array[elem];
+        sort_array[elem] = temp;
     }
 }
 

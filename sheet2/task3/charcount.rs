@@ -7,12 +7,9 @@ fn main() {
     println!("{}", count(&teststring, 't'));
 }
 
-
-
-
 fn count(string: &String, character: char) -> i32 {
     let mut counter = 0;
-    for c in string.chars(){
+    for c in string.chars() {
         if c == character {
             counter += 1;
         }

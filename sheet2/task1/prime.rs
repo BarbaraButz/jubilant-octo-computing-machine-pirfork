@@ -4,8 +4,7 @@ fn main() {
     for i in 1..21 {
         if is_prime(i) {
             println!("{}*", i);
-        }
-        else {
+        } else {
             println!("{}", i);
         }
     }
@@ -21,7 +20,7 @@ fn is_prime(n: u64) -> bool {
             return false;
         }
     }
-    return true;
+    true
 }
 
 #[test]
