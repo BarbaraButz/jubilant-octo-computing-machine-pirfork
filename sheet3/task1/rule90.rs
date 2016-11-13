@@ -73,7 +73,7 @@ fn read_input() -> Vec<bool> {
     vector
 }
 
-fn next_step(v: &Vec<bool>) -> Vec<bool> {
+fn next_step(v: &[bool]) -> Vec<bool> {
     let mut vector = Vec::new();
     let len = v.len();
     let first_triple = (v.get(len - 1), v.get(0), v.get(1));
