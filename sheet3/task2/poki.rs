@@ -130,6 +130,55 @@ struct PokemonModel {
     attacks: &'static [&'static Attack]
 }
 
+struct Pokemon {
+    model: &'static PokemonModel,
+    current_stats: Stats,
+    current_level: u8
+}
+
+impl Pokemon {
+
+    fn with_level(model: &'static PokemonModel, mut level: u8) -> Self {
+        if level > 100 {
+            level = 100;
+        }
+        Pokemon {
+            model: model,
+            current_stats: Stats::at_level(model.base_stats, level),
+            current_level: level,
+        }
+    }
+
+    fn stats(&self) -> &Stats {
+        &self.current_stats
+    }
+
+    fn model(&self) -> &PokemonModel {
+        self.model
+    }
+
+    fn name(&self) -> &'static str {
+        self.model.name
+    }
+
+    fn level(&self) -> u8 {
+        self.current_level
+    }
+
+    fn is_alive(&self) -> bool {
+        if self.current_stats.hp > 0 {
+            return true;
+        }
+        false
+    }
+
+    fn endure_attack(&mut self, opponent: &Pokemon, attack: Attack) {
+        let damage = attack_damage(opponent, &self, attack);
+        self.current_stats.hp -= damage;
+    }
+
+}
+
 /// Describes the basic stats of a Pokemon.
 ///
 /// Each living Pokemon has an actual stat value, but each Pokemon kind also
@@ -199,44 +248,44 @@ impl Stats {
 /// term quite a bit. The correct and complete formula can be found [here][1].
 ///
 /// [1]: http://bulbapedia.bulbagarden.net/wiki/Damage#Damage_formula
-// fn attack_damage(attacker: &Pokemon, defender: &Pokemon, attack: Attack) -> u16 {
-//     // Depending on the attack category, get the correct stats
-//     let (attack_mod, defense_mod) = match attack.category {
-//         AttackCategory::Physical => {
-//             (attacker.stats().attack, defender.stats().defense)
-//         }
-//         AttackCategory::Special => {
-//             (attacker.stats().special_attack, defender.stats().special_defense)
-//         }
-//     };
+ fn attack_damage(attacker: &Pokemon, defender: &Pokemon, attack: Attack) -> u16 {
+     // Depending on the attack category, get the correct stats
+     let (attack_mod, defense_mod) = match attack.category {
+         AttackCategory::Physical => {
+             (attacker.stats().attack, defender.stats().defense)
+         }
+         AttackCategory::Special => {
+             (attacker.stats().special_attack, defender.stats().special_defense)
+         }
+     };
 
-//     // Cast everything to f64 to reduce noise in actual formula
-//     let (attack_mod, defense_mod) = (attack_mod as f64, defense_mod as f64);
-//     let base_power = attack.base_power as f64;
-//     let attacker_level = attacker.level() as f64;
+     // Cast everything to f64 to reduce noise in actual formula
+     let (attack_mod, defense_mod) = (attack_mod as f64, defense_mod as f64);
+     let base_power = attack.base_power as f64;
+     let attacker_level = attacker.level() as f64;
 
-//     // The modifier only depends on the type effectiveness (in our simplified
-//     // version!).
-//     let modifier = match defender.model().type_ {
-//         PokemonType::One(ty) => {
-//             TypeEffectiveness::of_attack(attack.type_, ty).multiplier()
-//         }
-//         PokemonType::Two(ty_a, ty_b) => {
-//             TypeEffectiveness::of_attack(attack.type_, ty_a).multiplier()
-//                 * TypeEffectiveness::of_attack(attack.type_, ty_b).multiplier()
-//         }
-//     };
+     // The modifier only depends on the type effectiveness (in our simplified
+     // version!).
+     let modifier = match defender.model().type_ {
+         PokemonType::One(ty) => {
+             TypeEffectiveness::of_attack(attack.type_, ty).multiplier()
+         }
+         PokemonType::Two(ty_a, ty_b) => {
+             TypeEffectiveness::of_attack(attack.type_, ty_a).multiplier()
+                 * TypeEffectiveness::of_attack(attack.type_, ty_b).multiplier()
+         }
+     };
 
-//     // With every parameter prepared above, here is the formula
-//     (
-//         (
-//             ((2.0 * attacker_level + 10.0) / 250.0)
-//                 * (attack_mod / defense_mod)
-//                 * base_power
-//                 + 2.0
-//         ) * modifier
-//     ) as u16
-// }
+     // With every parameter prepared above, here is the formula
+     (
+         (
+             ((2.0 * attacker_level + 10.0) / 250.0)
+                 * (attack_mod / defense_mod)
+                 * base_power
+                 + 2.0
+         ) * modifier
+     ) as u16
+ }
 
 // ===========================================================================
 // ===========================================================================
