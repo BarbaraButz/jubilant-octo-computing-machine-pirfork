@@ -17,7 +17,7 @@ fn main() {
             }
         }
         println!("");
-        vector = next_step(vector);
+        vector = next_step(&vector);
     }
 }
 
@@ -73,7 +73,7 @@ fn read_input() -> Vec<bool> {
     vector
 }
 
-fn next_step(v: Vec<bool>) -> Vec<bool> {
+fn next_step(v: &Vec<bool>) -> Vec<bool> {
     let mut vector = Vec::new();
     let len = v.len();
     let first_triple = (v.get(len - 1), v.get(0), v.get(1));
@@ -120,8 +120,8 @@ fn calculate(neighbours: (Option<&bool>, Option<&bool>, Option<&bool>)) -> bool 
 
 #[test]
 fn rule90_rules() {
-    assert_eq!(next_step(vec![false, false, false]), vec![false, false, false]);
-    assert_eq!(next_step(vec![ true, false, false]), vec![false,  true,  true]);
-    assert_eq!(next_step(vec![ true,  true, false]), vec![ true,  true, false]);
-    assert_eq!(next_step(vec![ true,  true,  true]), vec![false, false, false]);
+    assert_eq!(next_step(&[false, false, false]), vec![false, false, false]);
+    assert_eq!(next_step(&[ true, false, false]), vec![false,  true,  true]);
+    assert_eq!(next_step(&[ true,  true, false]), vec![ true,  true, false]);
+    assert_eq!(next_step(&[ true,  true,  true]), vec![false, false, false]);
 }
