@@ -120,8 +120,8 @@ fn calculate(neighbours: (Option<&bool>, Option<&bool>, Option<&bool>)) -> bool 
 
 #[test]
 fn rule90_rules() {
-    assert_eq!(next_step(&[false, false, false]), vec![false, false, false]);
-    assert_eq!(next_step(&[ true, false, false]), vec![false,  true,  true]);
-    assert_eq!(next_step(&[ true,  true, false]), vec![ true,  true, false]);
-    assert_eq!(next_step(&[ true,  true,  true]), vec![false, false, false]);
+    assert_eq!(next_step(vec![false, false, false]), vec![false, false, false]);
+    assert_eq!(next_step(vec![ true, false, false]), vec![false,  true,  true]);
+    assert_eq!(next_step(vec![ true,  true, false]), vec![ true,  true, false]);
+    assert_eq!(next_step(vec![ true,  true,  true]), vec![false, false, false]);
 }
