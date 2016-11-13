@@ -1,10 +1,66 @@
 //! Task 3.2: Pokemon
 
 fn main() {
+
     let player1 = "Red";
     let player2 = "Blue";
     let pokemon1 = choose_pokemon(&player1);
     let pokemon2 = choose_pokemon(&player2);
+
+    let mut poki1 = Pokemon::with_level(pokemon1, 5);
+    let mut poki2 = Pokemon::with_level(pokemon2, 5);
+
+    if poki2.stats().speed > poki1.stats().speed {
+        let help = poki2;
+        poki2 = poki1;
+        poki1 = help;
+    }
+
+    while poki1.is_alive() && poki2.is_alive() {
+
+        let name1 = poki1.model().name;
+        let name2 = poki2.model().name;
+
+        let model1 = poki1.model();
+
+        println!(">>>>> Status: {} has {} HP, {} has {} HP",
+            name1, poki1.stats().hp,
+            name2, poki2.stats().hp);
+        println!(">>>>> {} is about to attack! Which move shall it execute?",
+            name1);
+        for i in 0..model1.attacks.len() {
+            println!("{}: {:?}", i, model1.attacks[i].name)
+        }
+        loop {
+            println!("!!! Please give me the attack ID:");
+            let id = read_string();
+            let index;
+            if id == "0" {
+                index = 0;
+            } else if id == "1" {
+                index = 1;
+            } else {
+                continue;
+            }
+            if index == 1 && model1.attacks.len() == 1 {
+                continue;
+            }
+            let someattack = model1.attacks[index];
+            poki2.endure_attack(&poki1, *someattack);
+            println!("{} uses {}! ({} has {} HP left)",
+                name1, someattack.name, name2, poki2.stats().hp);
+            break;
+        }
+        let help = poki2;
+        poki2 = poki1;
+        poki1 = help;
+        println!("");
+    }
+    if poki1.is_alive() {
+        println!(">>>>> {} fainted!", poki2.model().name);
+    } else {
+        println!(">>>>> {} fainted!", poki1.model().name);
+    }
 }
 
 
@@ -131,14 +187,14 @@ struct PokemonModel {
 }
 
 struct Pokemon {
-    model: &'static PokemonModel,
+    model: PokemonModel,
     current_stats: Stats,
     current_level: u8
 }
 
 impl Pokemon {
 
-    fn with_level(model: &'static PokemonModel, mut level: u8) -> Self {
+    fn with_level(model: PokemonModel, mut level: u8) -> Self {
         if level > 100 {
             level = 100;
         }
@@ -153,7 +209,7 @@ impl Pokemon {
         &self.current_stats
     }
 
-    fn model(&self) -> &PokemonModel {
+    fn model(&self) -> PokemonModel {
         self.model
     }
 
@@ -174,7 +230,7 @@ impl Pokemon {
 
     fn endure_attack(&mut self, opponent: &Pokemon, attack: Attack) {
         let damage = attack_damage(opponent, &self, attack);
-        self.current_stats.hp -= damage;
+        self.current_stats.hp = self.current_stats.hp.saturating_sub(damage);
     }
 
 }
@@ -522,10 +578,9 @@ fn find_pokemon_by_name(name: &str) -> Option<PokemonModel> {
     None
 }
 
-fn choose_pokemon(name: &str) -> Option<PokemonModel> {
-    let mut valid = false;
-    let mut pokemon = None;
-    while valid == false {
+fn choose_pokemon(name: &str) -> PokemonModel {
+    let mut pokemon;
+    loop {
         println!("Player {}, please choose a Pokemon (or type '?' to get a complete list)", name);
         let string = read_string();
         if string == "?" {
@@ -533,10 +588,8 @@ fn choose_pokemon(name: &str) -> Option<PokemonModel> {
             continue;
         }
         pokemon = find_pokemon_by_name(&string);
-        if let None = pokemon{
-            continue;
+        if let Some(poki) = pokemon {
+            return poki;
         }
-        valid = true;
     }
-    pokemon
 }
