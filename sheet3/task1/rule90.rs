@@ -4,16 +4,15 @@ fn main() {
 
     let mut vector = read_input();
 
-    for i in 0..20 {
-        for j in 0..vector.len() {
-            match vector.get(j) {
-                Some(&false) => {
+    for _ in 0..20 {
+        for elem in &vector {
+            match elem {
+                &false => {
                     print!("0");
                 },
-                Some(&true) => {
+                &true => {
                     print!("1");
                 },
-                _ => {},
             }
         }
         println!("");
@@ -54,63 +53,48 @@ fn read_input() -> Vec<bool> {
         buffer.trim().to_string()
     };
 
-    let vector = {
-        let mut v = Vec::with_capacity(input.chars().count());
-        for i in input.chars() {
-            match i {
-                '0' => {
-                    v.push(false);
-                },
-                '1' => {
-                    v.push(true);
-                },
-                _ => {},
+    let mut vector = Vec::new();
+    for i in input.chars() {
+        match i {
+            '0' => {
+                vector.push(false);
+            },
+            '1' => {
+                vector.push(true);
+            },
+            _ => {},
 
-            }
         }
-        v
-    };
+    }
     vector
 }
 
 fn next_step(v: &[bool]) -> Vec<bool> {
     let mut vector = Vec::new();
     let len = v.len();
-    let first_triple = (v.get(len - 1), v.get(0), v.get(1));
+    let first_triple = (v[len - 1], v[0], v[1]);
     vector.push(calculate(first_triple));
     for i in 1..v.len() - 1 {
-        let triple = (v.get(i - 1), v.get(i), v.get(i + 1));
+        let triple = (v[i - 1], v[i], v[i + 1]);
         vector.push(calculate(triple));
     }
-    let last_triple = (v.get(len - 2), v.get(len - 1), v.get(0));
+    let last_triple = (v[len - 2], v[len - 1], v[0]);
     vector.push(calculate(last_triple));
-    return vector;
+    vector
 }
 
-fn calculate(neighbours: (Option<&bool>, Option<&bool>, Option<&bool>)) -> bool {
+fn calculate(neighbours: (bool, bool, bool)) -> bool {
     match neighbours {
-        (Some(&false), Some(&false), Some(&false)) => {
+        (false, false, false) => {
             return false;
         },
-        //(Some(&false), Some(&false), Some(&true)) => {
-        //    return true;
-        //},
-        (Some(&false), Some(&true), Some(&false)) => {
+        (false, true, false) => {
             return false;
         },
-        //(Some(&false), Some(&true), Some(&true)) => {
-        //    return true;
-        //},
-        //(Some(&true), Some(&false), Some(&false)) => {
-        //    return true;
-        //},
-        (Some(&true), Some(&false), Some(&true)) => {
+        (true, false, true) => {
             return false;
         },
-        //(Some(&true), Some(&true), Some(&false)) => {
-        //    return true;
-        //},
-        (Some(&true), Some(&true), Some(&true)) => {
+        (true, true, true) => {
             return false;
         },
         (_, _, _) => {},
