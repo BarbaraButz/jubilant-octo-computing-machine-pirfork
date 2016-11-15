@@ -33,19 +33,11 @@ fn main() {
         }
         loop {
             println!("!!! Please give me the attack ID:");
-            let id = read_string();
-            let index;
-            if id == "0" {
-                index = 0;
-            } else if id == "1" {
-                index = 1;
-            } else {
+            let id = read_usize();
+            if id >= model1.attacks.len() {
                 continue;
             }
-            if index == 1 && model1.attacks.len() == 1 {
-                continue;
-            }
-            let someattack = model1.attacks[index];
+            let someattack = model1.attacks[id];
             poki2.endure_attack(&poki1, *someattack);
             println!("{} uses {}! ({} has {} HP left)",
                 name1, someattack.name, name2, poki2.stats().hp);
