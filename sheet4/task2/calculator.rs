@@ -150,7 +150,7 @@ impl Expr {
             Expr::Internal {
                 ref operator, ref children
             } =>
-            operator.apply(((children[0]).evaluate()), ((children[0]).evaluate()))
+            operator.apply(((children[0]).evaluate()), ((children[1]).evaluate()))
         }
     }
 }
@@ -177,8 +177,8 @@ fn main() {
         match tokenized {
             Some(mut tokens) => {
                 // Debug output
-                println!("{}", input);
-                println!("{:#?}", tokens);
+                //println!("{}", input);
+                //println!("{:#?}", tokens);
                 let parsetree = Expr::parse(&mut tokens);
                 if let Some(tree) = parsetree {
                     let result = tree.evaluate();
