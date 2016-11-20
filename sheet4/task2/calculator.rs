@@ -4,16 +4,6 @@ enum Token {
     Operator(Op),
     OpeningBracket,
     ClosingBracket,
-    //BracketExpression {
-    //    opening: char,
-    //    token: Box<Token>,
-    //    closing: char,
-    //},
-    //ArithmeticExpression {
-    //    first_token: Box<Token>,
-    //    oparator: char,
-    //    second_token: Box<Token>,
-    //},
 }
 
 impl Token {
@@ -112,10 +102,8 @@ impl Expr {
                                 if let Some(expr2) = Expr::parse(child2) {
                                     expression.children_push(expr1);
                                     expression.children_push(expr2);
-                                }
+                                    return Some(expression);                                }
                             }
-
-
                         }
                     },
                     Token::Operator(Op::Minus) => {
@@ -129,15 +117,21 @@ impl Expr {
                                 if let Some(expr2) = Expr::parse(child2) {
                                     expression.children_push(expr1);
                                     expression.children_push(expr2);
+                                    return Some(expression);
                                 }
                             }
                         }
                     },
+                    _ => {},
+                }
+            } else {
+                match tokens[i] {
                     Token::OpeningBracket => bracketcounter += 1,
                     Token::ClosingBracket => bracketcounter -= 1,
                     _ => {},
                 }
             }
+
 
         }
 
