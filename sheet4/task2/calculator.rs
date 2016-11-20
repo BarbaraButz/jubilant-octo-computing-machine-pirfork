@@ -1,6 +1,6 @@
 #[derive(Clone, Debug)]
 enum Token {
-    Number(u32),
+    Number(i32),
     Operator(Op),
     OpeningBracket,
     ClosingBracket,
@@ -9,15 +9,53 @@ enum Token {
 impl Token {
     fn tokenize(string: &mut String) -> Option<Vec<Token>> {
         let mut tokens = Vec::new();
+        let mut number = -1;
+        let mut digit = 0;
         while !string.is_empty() {
             let last_elem = string.pop();
             match last_elem {
-                Some(' ') => {},
-                Some('(') => tokens.push(Token::OpeningBracket),
-                Some(')') => tokens.push(Token::ClosingBracket),
-                Some('+') => tokens.push(Token::Operator(Op::Plus)),
-                Some('-') => tokens.push(Token::Operator(Op::Minus)),
-                Some('0') => tokens.push(Token::Number(0)),
+                Some(' ') => {
+                    if number != -1 {
+                        tokens.push(Token::Number(number));
+                        number = -1;
+                        digit = 0;
+                    }
+                },
+                Some('(') => {
+                    if number != -1 {
+                        tokens.push(Token::Number(number));
+                        number = -1;
+                        digit = 0;
+                    }
+                    tokens.push(Token::OpeningBracket);
+                }
+                Some(')') => {
+                    if number != -1 {
+                        tokens.push(Token::Number(number));
+                        number = -1;
+                        digit = 0;
+                    }
+                    tokens.push(Token::ClosingBracket);
+                }
+
+                Some('+') => {
+                    if number != -1 {
+                        tokens.push(Token::Number(number));
+                        number = -1;
+                        digit = 0;
+                    }
+                    tokens.push(Token::Operator(Op::Plus));
+                }
+                Some('-') => {
+                    if number != -1 {
+                        tokens.push(Token::Number(number));
+                        number = -1;
+                        digit = 0;
+                    }
+                    tokens.push(Token::Operator(Op::Minus));
+                }
+
+                /*Some('0') => tokens.push(Token::Number(0)),
                 Some('1') => tokens.push(Token::Number(1)),
                 Some('2') => tokens.push(Token::Number(2)),
                 Some('3') => tokens.push(Token::Number(3)),
@@ -26,9 +64,91 @@ impl Token {
                 Some('6') => tokens.push(Token::Number(6)),
                 Some('7') => tokens.push(Token::Number(7)),
                 Some('8') => tokens.push(Token::Number(8)),
-                Some('9') => tokens.push(Token::Number(9)),
+                Some('9') => tokens.push(Token::Number(9)),*/
+                Some('0') => {
+                    if number == -1 {
+                        number = 0;
+                    }
+                    digit += 1;
+                },
+                Some('1') => {
+                    if number == -1 {
+                        number = 1;
+                    } else {
+                        number += 10_i32.pow(digit);
+                    }
+                    digit += 1;
+
+                },
+                Some('2') => {
+                    if number == -1 {
+                        number = 2;
+                    } else {
+                        number += 2 * 10_i32.pow(digit);
+                    }
+                    digit += 1;
+                },
+                Some('3') => {
+                    if number == -1 {
+                        number = 3;
+                    } else {
+                        number += 3 * 10_i32.pow(digit);
+                    }
+                    digit += 1;
+                },
+                Some('4') => {
+                    if number == -1 {
+                        number = 4;
+                    } else {
+                        number += 4 * 10_i32.pow(digit);
+                    }
+                    digit += 1;
+                },
+                Some('5') => {
+                    if number == -1 {
+                        number = 5;
+                    } else {
+                        number += 5 * 10_i32.pow(digit);
+                    }
+                    digit += 1;
+                },
+               Some('6') => {
+                    if number == -1 {
+                        number = 6;
+                    } else {
+                        number += 6 * 10_i32.pow(digit);
+                    }
+                    digit += 1;
+                },
+                Some('7') => {
+                    if number == -1 {
+                        number = 7;
+                    } else {
+                        number += 7 * 10_i32.pow(digit);
+                    }
+                    digit += 1;
+                },
+                Some('8') => {
+                    if number == -1 {
+                        number = 8;
+                    } else {
+                        number += 8 * 10_i32.pow(digit);
+                    }
+                    digit += 1;
+                },
+                Some('9') => {
+                    if number == -1 {
+                        number = 9;
+                    } else {
+                        number += 9 * 10_i32.pow(digit);
+                    }
+                    digit += 1;
+                },
                 _ => return None,
             }
+        }
+        if number != -1 {
+            tokens.push(Token::Number(number));
         }
         tokens.reverse();
         return Some(tokens);
@@ -56,7 +176,7 @@ impl Op {
 
 #[derive(Clone, Debug)]
 enum Expr {
-    Leaf(u32),
+    Leaf(i32),
     Internal {
         operator: Op,
         children: Vec<Expr>,
