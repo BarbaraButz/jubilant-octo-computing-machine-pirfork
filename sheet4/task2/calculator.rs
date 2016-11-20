@@ -71,6 +71,9 @@ impl Expr {
     }
     fn parse(tokens: &mut [Token]) -> Option<Expr> {
         let length = tokens.len();
+        if length == 0 {
+            return None;
+        }
         if length == 1 {
             match tokens[0] {
                 Token::Number(x) => return Some(Expr::Leaf(x)),
@@ -177,6 +180,8 @@ fn main() {
                 if let Some(tree) = parsetree {
                     let result = tree.evaluate();
                     println!("Result: {}", result);
+                } else {
+                    println!("Invalid Input!");
                 }
             },
             None => {
