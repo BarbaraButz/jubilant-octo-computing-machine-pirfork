@@ -7,21 +7,21 @@ enum Token {
 }
 
 impl Token {
-    fn tokenize(string: &mut String) -> Option<Vec<Token>> {
+    fn tokenize(string: &mut String) -> Result<Vec<Token>,InputError> {
         let mut tokens = Vec::new();
         let mut number = -1;
         let mut digit = 0;
         while !string.is_empty() {
-            let last_elem = string.pop();
+            let last_elem = string.pop().unwrap();
             match last_elem {
-                Some(' ') => {
+                ' ' => {
                     if number != -1 {
                         tokens.push(Token::Number(number));
                         number = -1;
                         digit = 0;
                     }
                 },
-                Some('(') => {
+                '(' => {
                     if number != -1 {
                         tokens.push(Token::Number(number));
                         number = -1;
@@ -29,7 +29,7 @@ impl Token {
                     }
                     tokens.push(Token::OpeningBracket);
                 }
-                Some(')') => {
+                ')' => {
                     if number != -1 {
                         tokens.push(Token::Number(number));
                         number = -1;
@@ -38,7 +38,7 @@ impl Token {
                     tokens.push(Token::ClosingBracket);
                 }
 
-                Some('+') => {
+                '+' => {
                     if number != -1 {
                         tokens.push(Token::Number(number));
                         number = -1;
@@ -46,7 +46,7 @@ impl Token {
                     }
                     tokens.push(Token::Operator(Op::Plus));
                 }
-                Some('-') => {
+                '-' => {
                     if number != -1 {
                         tokens.push(Token::Number(number));
                         number = -1;
@@ -54,24 +54,13 @@ impl Token {
                     }
                     tokens.push(Token::Operator(Op::Minus));
                 }
-
-                /*Some('0') => tokens.push(Token::Number(0)),
-                Some('1') => tokens.push(Token::Number(1)),
-                Some('2') => tokens.push(Token::Number(2)),
-                Some('3') => tokens.push(Token::Number(3)),
-                Some('4') => tokens.push(Token::Number(4)),
-                Some('5') => tokens.push(Token::Number(5)),
-                Some('6') => tokens.push(Token::Number(6)),
-                Some('7') => tokens.push(Token::Number(7)),
-                Some('8') => tokens.push(Token::Number(8)),
-                Some('9') => tokens.push(Token::Number(9)),*/
-                Some('0') => {
+                '0' => {
                     if number == -1 {
                         number = 0;
                     }
                     digit += 1;
                 },
-                Some('1') => {
+                '1' => {
                     if number == -1 {
                         number = 1;
                     } else {
@@ -80,7 +69,7 @@ impl Token {
                     digit += 1;
 
                 },
-                Some('2') => {
+                '2' => {
                     if number == -1 {
                         number = 2;
                     } else {
@@ -88,7 +77,7 @@ impl Token {
                     }
                     digit += 1;
                 },
-                Some('3') => {
+                '3' => {
                     if number == -1 {
                         number = 3;
                     } else {
@@ -96,7 +85,7 @@ impl Token {
                     }
                     digit += 1;
                 },
-                Some('4') => {
+                '4' => {
                     if number == -1 {
                         number = 4;
                     } else {
@@ -104,7 +93,7 @@ impl Token {
                     }
                     digit += 1;
                 },
-                Some('5') => {
+                '5' => {
                     if number == -1 {
                         number = 5;
                     } else {
@@ -112,7 +101,7 @@ impl Token {
                     }
                     digit += 1;
                 },
-               Some('6') => {
+                '6' => {
                     if number == -1 {
                         number = 6;
                     } else {
@@ -120,7 +109,7 @@ impl Token {
                     }
                     digit += 1;
                 },
-                Some('7') => {
+                '7' => {
                     if number == -1 {
                         number = 7;
                     } else {
@@ -128,7 +117,7 @@ impl Token {
                     }
                     digit += 1;
                 },
-                Some('8') => {
+                '8' => {
                     if number == -1 {
                         number = 8;
                     } else {
@@ -136,7 +125,7 @@ impl Token {
                     }
                     digit += 1;
                 },
-                Some('9') => {
+                '9' => {
                     if number == -1 {
                         number = 9;
                     } else {
@@ -144,14 +133,14 @@ impl Token {
                     }
                     digit += 1;
                 },
-                _ => return None,
+                x => return Err(InputError::TokenizationError{invalid: x}),
             }
         }
         if number != -1 {
             tokens.push(Token::Number(number));
         }
         tokens.reverse();
-        return Some(tokens);
+        Ok(tokens)
     }
 }
 
@@ -189,24 +178,15 @@ impl Expr {
             children.push(expression);
         }
     }
-    fn parse(tokens: &mut [Token]) -> Option<Expr> {
+    fn parse(tokens: &mut [Token]) -> Result<Expr, InputError> {
         let length = tokens.len();
         if length == 0 {
-            return None;
+            return Err(InputError::ParseEmptyError);
         }
         if length == 1 {
             match tokens[0] {
-                Token::Number(x) => return Some(Expr::Leaf(x)),
-                _ => return None,
-            }
-        }
-        if let Token::OpeningBracket = tokens[0] {
-            if let Token::ClosingBracket = tokens[length-1] {
-                if let Some((_, elements)) = tokens.split_first_mut() {
-                    if let Some((_, newelements)) = elements.split_last_mut() {
-                        return Expr::parse(newelements);
-                    }
-                }
+                Token::Number(x) => return Ok(Expr::Leaf(x)),
+                _ => return Err(InputError::ParseInvalidError),
             }
         }
         let mut bracketcounter = 0;
@@ -221,11 +201,12 @@ impl Expr {
                         };
                         let (mut child1, mut rest) = tokens.split_at_mut(i);
                         if let Some((_, mut child2)) = rest.split_first_mut() {
-                            if let Some(expr1) = Expr::parse(child1) {
-                                if let Some(expr2) = Expr::parse(child2) {
+                            if let Ok(expr1) = Expr::parse(child1) {
+                                if let Ok(expr2) = Expr::parse(child2) {
                                     expression.children_push(expr1);
                                     expression.children_push(expr2);
-                                    return Some(expression);                                }
+                                    return Ok(expression);
+                                }
                             }
                         }
                     },
@@ -236,11 +217,11 @@ impl Expr {
                         };
                         let (mut child1, mut rest) = tokens.split_at_mut(i);
                         if let Some((_, mut child2)) = rest.split_first_mut() {
-                            if let Some(expr1) = Expr::parse(child1) {
-                                if let Some(expr2) = Expr::parse(child2) {
+                            if let Ok(expr1) = Expr::parse(child1) {
+                                if let Ok(expr2) = Expr::parse(child2) {
                                     expression.children_push(expr1);
                                     expression.children_push(expr2);
-                                    return Some(expression);
+                                    return Ok(expression);
                                 }
                             }
                         }
@@ -254,11 +235,17 @@ impl Expr {
                     _ => {},
                 }
             }
-
-
         }
-
-        return None;
+        if let Token::OpeningBracket = tokens[0] {
+            if let Token::ClosingBracket = tokens[length-1] {
+                if let Some((_, elements)) = tokens.split_first_mut() {
+                    if let Some((_, newelements)) = elements.split_last_mut() {
+                        return Expr::parse(newelements);
+                    }
+                }
+            }
+        }
+        Err(InputError::ParseInvalidError)
     }
 
     fn evaluate(&self) -> i32 {
@@ -266,10 +253,18 @@ impl Expr {
             Expr::Leaf(x) => x as i32,
             Expr::Internal {
                 ref operator, ref children
-            } =>
-            operator.apply(((children[0]).evaluate()), ((children[1]).evaluate()))
+            } => operator.apply(((children[0]).evaluate()), ((children[1]).evaluate()))
         }
     }
+}
+
+enum InputError {
+    TokenizationError {
+        invalid: char
+    },
+    ParseEmptyError,
+    ParseInvalidError,
+
 }
 
 fn expr_test() -> bool {
@@ -282,7 +277,7 @@ fn expr_test() -> bool {
 }
 
 fn main() {
-    println!("{}", expr_test());
+    println!("evaluate()-test passed? {}", expr_test());
     loop {
         // Read input from the user and just do nothing when the input is empty
         let mut input = read_string();
@@ -292,20 +287,29 @@ fn main() {
 
         let tokenized = Token::tokenize(&mut input);
         match tokenized {
-            Some(mut tokens) => {
-                // Debug output
-                //println!("{}", input);
-                //println!("{:#?}", tokens);
+            Ok(mut tokens) => {
                 let parsetree = Expr::parse(&mut tokens);
-                if let Some(tree) = parsetree {
-                    let result = tree.evaluate();
-                    println!("Result: {}", result);
-                } else {
-                    println!("Invalid Input!");
+                match parsetree {
+                    Ok(tree) => {
+                        let result = tree.evaluate();
+                        println!("Result: {}", result);
+                    },
+                    Err(InputError::ParseEmptyError) => {
+                        println!("Nothing to calculate!");
+                    },
+                    Err(InputError::ParseInvalidError) => {
+                        println!("Invalid Order!");
+                    },
+                    _ => println!("Something very strange happened here..."),
                 }
             },
-            None => {
-                println!("Invalid Input!")
+            Err(error) => {
+                if let InputError::TokenizationError{invalid} = error {
+                    println!("Invalid Character! -> {}", invalid);
+                } else {
+                    println!("Something very strange happened here...");
+                }
+
             },
         }
 
