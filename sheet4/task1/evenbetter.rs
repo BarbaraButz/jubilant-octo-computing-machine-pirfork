@@ -28,7 +28,7 @@ fn happy_check(mut n: i32) -> bool {
             help
         };
         // We ended up in a cycle -> not happy
-        if n == 4{
+        if n == 4 {
             return false;
         }
     }
