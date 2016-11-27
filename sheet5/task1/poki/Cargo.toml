@@ -1,0 +1,6 @@
+[package]
+name = "poki"
+version = "0.1.0"
+authors = ["BarbaraButz <bbutz@uos.de>"]
+
+[dependencies]
