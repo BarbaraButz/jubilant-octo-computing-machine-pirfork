@@ -1,3 +1,5 @@
+use super::term_painter::ToStyle;
+use super::term_painter::Color::*;
 use super::db::types::*;
 use super::db::data::POKEDEX;
 use super::db::find_pokemon_by_name;
@@ -18,7 +20,7 @@ pub fn fight() {
             if poki.is_alive() {
                 false
             } else {
-                println!(">>>>> {} fainted!", poki.name());
+                println!(">>>>> {} fainted!", Green.paint(poki.name()));
                 true
             }
         }
@@ -26,10 +28,10 @@ pub fn fight() {
         // Print status
         println!(
             ">>>>> Status: {} has {} HP, {} has {} HP",
-            poki_red.name(),
-            poki_red.stats().hp,
-            poki_blue.name(),
-            poki_blue.stats().hp,
+            BrightRed.paint(poki_red.name()),
+            Red.paint(poki_red.stats().hp),
+            BrightBlue.paint(poki_blue.name()),
+            Blue.paint(poki_blue.stats().hp),
         );
 
         // Execute both attack
@@ -68,13 +70,13 @@ fn execute_round(attacker: &Pokemon, defender: &mut Pokemon) {
     // Tell the user to choose an attack
     println!(
         ">>>>> {} is about to attack! Which move shall it execute?",
-        attacker.model().name
+        Green.paint(attacker.model().name)
     );
 
     // Print a list of available attacks
     let num_attacks = attacker.model().attacks.len();
     for i in 0..num_attacks {
-        println!("    {}: {}", i, attacker.model().attacks[i].name);
+        println!("    {}: {}", i, BrightBlack.paint(attacker.model().attacks[i].name));
     }
     println!("    !!! Please give me the attack ID:");
 
@@ -97,10 +99,10 @@ fn execute_round(attacker: &Pokemon, defender: &mut Pokemon) {
     // Status update
     println!(
         ">>>>> {} uses {}! ({} has {} HP left)",
-        attacker.model().name,
-        attack.name,
-        defender.model().name,
-        defender.stats().hp,
+        Magenta.paint(attacker.model().name),
+        BrightBlack.paint(attack.name),
+        Cyan.paint(defender.model().name),
+        BrightCyan.paint(defender.stats().hp),
     );
 }
 
