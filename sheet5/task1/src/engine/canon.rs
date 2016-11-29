@@ -1,5 +1,5 @@
-use super::super::db::types::*;
-use super::Pokemon;
+use ::db::types::*;
+use ::engine::Pokemon;
 
 impl TypeEffectiveness {
     /// Returns the type effectiveness of an attack from one attacker type

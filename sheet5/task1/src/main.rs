@@ -1,8 +1,8 @@
 extern crate term_painter;
 
-pub mod db;
-pub mod engine;
-pub mod game;
+mod db;
+mod engine;
+mod game;
 
 use game::fight;
 

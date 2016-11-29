@@ -1,9 +1,9 @@
-use super::term_painter::ToStyle;
-use super::term_painter::Color::*;
-use super::db::types::*;
-use super::db::data::POKEDEX;
-use super::db::find_pokemon_by_name;
-use super::engine::Pokemon;
+use ::term_painter::ToStyle;
+use ::term_painter::Color::*;
+use ::db::types::*;
+use ::db::data::POKEDEX;
+use ::db::find_pokemon_by_name;
+use ::engine::Pokemon;
 
 pub fn fight() {
 
