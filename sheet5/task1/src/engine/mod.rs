@@ -1,7 +1,7 @@
 mod canon;
 
-use ::db::types::*;
-use ::engine::canon::attack_damage;
+use db::types::*;
+use engine::canon::attack_damage;
 
 /// Represents a Pokemon.
 #[derive(Debug, Clone, Copy)]
