@@ -16,6 +16,7 @@ impl TypeEffectiveness {
             (Water, Grass) => Te::NotVeryEffective,
             (Grass, Fire) => Te::NotVeryEffective,
             (Grass, Water) => Te::SuperEffective,
+            (Ground, Flying) => Te::NotEffective,
             _ => Te::Normal,
         }
     }
