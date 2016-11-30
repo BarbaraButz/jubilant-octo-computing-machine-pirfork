@@ -1,0 +1,8 @@
+[package]
+name = "task1"
+version = "0.1.0"
+authors = ["BarbaraButz <bbutz@uos.de>"]
+
+[dependencies]
+
+term-painter = "0.2"
