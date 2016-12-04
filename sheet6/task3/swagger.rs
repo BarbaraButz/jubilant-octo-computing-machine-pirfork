@@ -1,7 +1,7 @@
 use std::fmt;
 
 struct Swagger<T> {
-    swag: T,
+    swag: T
 }
 
 impl<T: fmt::Display> fmt::Display for Swagger<T> {
@@ -10,15 +10,13 @@ impl<T: fmt::Display> fmt::Display for Swagger<T> {
     }
 }
 
-trait YoloSwag {
-        fn with_swag(&self) -> Swagger<Self>
-        where Self: std::marker::Sized + std::clone::Clone;
+trait YoloSwag : Clone {
+    fn with_swag(&self) -> Swagger<Self>;
 }
 
-impl<T> YoloSwag for T {
-    fn with_swag(&self) -> Swagger<Self>
-    where T: std::clone::Clone {
-        Swagger{swag: (*self).clone()}
+impl<T: Clone> YoloSwag for T {
+    fn with_swag(&self) -> Swagger<Self> {
+        Swagger { swag: (*self).clone() }
     }
 }
 
