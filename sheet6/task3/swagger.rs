@@ -1,27 +1,23 @@
 use std::fmt;
 
 struct Swagger<T> {
-    yolo: T,
-}
-
-impl<T> Swagger<T> {
-
+    swag: T,
 }
 
 impl<T: fmt::Display> fmt::Display for Swagger<T> {
     fn fmt(&self, f: &mut fmt::Formatter) -> Result<(), fmt::Error> {
-        write!(f, "yolo {} swag", self.yolo)
+        write!(f, "yolo {} swag", self.swag)
     }
 }
 
-trait SwaggerExt {
+trait YoloSwag {
         fn with_swag(self) -> Swagger<Self>
         where Self: std::marker::Sized;
 }
 
-impl<T> SwaggerExt for T {
+impl<T> YoloSwag for T {
     fn with_swag(self) -> Swagger<Self> {
-        Swagger{yolo: self}
+        Swagger{swag: self}
     }
 }
 
