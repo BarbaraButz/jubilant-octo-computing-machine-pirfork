@@ -11,19 +11,24 @@ impl<T: fmt::Display> fmt::Display for Swagger<T> {
 }
 
 trait YoloSwag {
-        fn with_swag(self) -> Swagger<Self>
-        where Self: std::marker::Sized;
+        fn with_swag(&self) -> Swagger<Self>
+        where Self: std::marker::Sized + std::clone::Clone;
 }
 
 impl<T> YoloSwag for T {
-    fn with_swag(self) -> Swagger<Self> {
-        Swagger{swag: self}
+    fn with_swag(&self) -> Swagger<Self>
+    where T: std::clone::Clone {
+        Swagger{swag: (*self).clone()}
     }
 }
 
 fn main() {
+    let piep = "piep".to_string();
     let x = 3.with_swag();
     let y = "hallo".with_swag();
+    let z = piep.with_swag();
     println!("{}", x);
     println!("{}", y);
+    println!("{}", piep);
+    println!("{}", z);
 }
