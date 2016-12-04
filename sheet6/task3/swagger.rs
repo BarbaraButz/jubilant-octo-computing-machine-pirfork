@@ -12,7 +12,7 @@ impl<T: fmt::Display> fmt::Display for Swagger<T> {
 
 trait YoloSwag {
         fn with_swag(&self) -> Swagger<Self>
-        where Self: std::marker::Sized + std::clone::Clone;
+        where Self: std::clone::Clone;
 }
 
 impl<T> YoloSwag for T {
