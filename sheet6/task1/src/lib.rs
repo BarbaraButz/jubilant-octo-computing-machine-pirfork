@@ -59,7 +59,7 @@ mod tests {
         assert_eq!(sum_and_product(1, 2), (3, 2));
     }
 
-        #[test]
+    #[test]
     fn test_into_opt() {
         use super::IntoOptExt;
         assert_eq!(false.into_option(3), None);
