@@ -34,7 +34,9 @@ impl IntoOptExt for bool {
     }
 }
 
+#[cfg(test)]
 mod tests {
+
     #[test]
     fn test_clamp() {
         use super::clamp;

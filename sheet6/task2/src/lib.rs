@@ -62,6 +62,7 @@ impl<T> PartialEq for Vector2<T>
     }
 }
 
+#[cfg(test)]
 mod tests {
 
     use super::*;
