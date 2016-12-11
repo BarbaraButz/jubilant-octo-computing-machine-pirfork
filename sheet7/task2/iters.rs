@@ -83,13 +83,15 @@ fn test_rot26() {
 }
 
 fn used_chars_count(x: &[&str]) -> u64 {
-    let mut chars = x.iter().map(|s| s.trim()).
+    let mut chars = x.iter().
+        map(|s| s.split_whitespace().collect::<String>()).
         fold(String::new(), |mut acc, y| {
-            acc.push_str(y);
+            acc.push_str(&y);
             acc
         }).chars().collect::<Vec<char>>();
         chars.sort();
         chars.dedup();
+        println!("{:?}", chars);
         chars.len() as u64
 }
 
@@ -101,5 +103,5 @@ fn test_used_letters() {
 }
 
 fn main() {
-
+    used_chars_count(&["hi", "ih gitt"]);
 }
