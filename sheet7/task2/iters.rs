@@ -1,3 +1,5 @@
+use std::iter::once;
+
 fn factorial(x: u8) -> u64 {
     (1..x as u64 + 1).product()
 }
@@ -25,8 +27,9 @@ fn test_is_palindrome() {
 
 fn greatest_subsequencial_sum(x: &[i64]) -> &[i64] {
     (1..x.len() + 1).flat_map(|y| x.windows(y))
+        .chain(once(&x[..0]))
         .max_by_key(|s| s.iter().sum::<i64>())
-        .unwrap_or(&[])
+        .unwrap()
 }
 
 #[test]
@@ -39,7 +42,7 @@ fn test_greatest_subsequencial_sum() {
 }
 
 fn rot13(secret: &str) -> String {
-    "hi".to_string()
+    unimplemented!()
 }
 
 #[test]
@@ -56,7 +59,7 @@ fn test_rot13() {
 }
 
 fn used_chars_count(x: &[&str]) -> u64 {
-    1
+    unimplemented!()
 }
 
 #[test]
