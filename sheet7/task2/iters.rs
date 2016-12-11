@@ -74,7 +74,7 @@ fn test_rot13() {
 }
 
 fn rot26(secret: &str) -> String {
-    return secret.to_string();
+    secret.to_string()
 }
 
 #[test]
@@ -83,7 +83,14 @@ fn test_rot26() {
 }
 
 fn used_chars_count(x: &[&str]) -> u64 {
-    unimplemented!()
+    let mut chars = x.iter().
+        fold(String::new(), |mut acc, y| {
+            acc.push_str(y);
+            acc
+        }).chars().collect::<Vec<char>>();
+        chars.sort();
+        chars.dedup();
+        chars.len() as u64
 }
 
 #[test]
@@ -96,4 +103,5 @@ fn test_used_letters() {
 fn main() {
     println!("{:?}", rot13("BarbaraKaroline"));
     println!("Hellooooo");
+    println!("{:?}", used_chars_count(&["Hello", "Goodbye"]));
 }
