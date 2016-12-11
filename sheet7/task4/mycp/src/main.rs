@@ -6,23 +6,22 @@ use std::io::LineWriter;
 use std::io::BufRead;
 use std::io::Write;
 use std::string::String;
+use std::io::Error;
+use std::io::ErrorKind;
 
 fn main() {
     let filenames = read_filenames();
     let files = match filenames {
         Ok(x) => x,
         Err(x) => {
-        println!("{:?}", x);
+        println!("{:#?}", x);
         process::exit(1);
         }
     };
-    copy_file(&files[0], &files[1]);
-}
-
-#[derive(Debug)]
-enum Error {
-    InvalidLength,
-    NonexistentFile,
+    if let Err(x) = copy_file(&files[0], &files[1]) {
+        println!("{:#?}", x);
+        process::exit(1);
+    }
 }
 
 fn read_filenames() -> Result<Vec<String>, Error> {
@@ -33,34 +32,39 @@ fn read_filenames() -> Result<Vec<String>, Error> {
             let filenames = filenames.split_off(1);
             Ok(filenames)
         }
-        _ => Err(Error::InvalidLength),
+        _ => Err(Error::new(ErrorKind::InvalidInput, "Invalid length, needs two arguments!")),
     }
 }
 
-fn copy_file(oldpath: &String, newpath: &String) /*-> Result<(), _> */{
+fn copy_file(oldpath: &String, newpath: &String) -> Result<(), Error> {
     let oldfile = match File::open(oldpath) {
         Ok(x) => x,
         //
-        // ändern!!!!
+        // ändern?
         //
-        Err(_) => process::exit(1),
+        Err(y) => return Err(y),
     };
     let newfile = match File::create(newpath) {
         Ok(x) => x,
         //
-        // ändern!!!!
+        // ändern?
         //
-        Err(_) => process::exit(1),
+        Err(x) => return Err(x),
     };
-    let mut reader = BufReader::new(oldfile);
+    let reader = BufReader::new(oldfile);
     let mut writer = LineWriter::new(newfile);
-    let mut buffer = String::new();
-    //let bytes = -1;
-    while reader.read_line(&mut buffer).unwrap() != 0 {
-        //
-        // ändern
-        //
-        let _ = writer.write(String::as_bytes(&buffer));
+    let mut buffer;
+
+    for line in reader.lines() {
+        buffer = match line {
+            Ok(x) => x,
+            Err(x) => return Err(x),
+        };
+        buffer.push('\n');
+        if let Err(x) = writer.write(String::as_bytes(&buffer)){
+            return Err(x);
+        }
         buffer.clear();
     }
+    Ok(())
 }
