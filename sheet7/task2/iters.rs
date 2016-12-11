@@ -48,10 +48,11 @@ fn rot13(secret: &str) -> String {
 }
 
 fn rotate(old: char) -> char {
-    let mut digit = (old.to_digit(36).unwrap() + 13) % 36;
-    if digit <= 9 {
-        digit += 10
-    };
+    let mut digit = old.to_digit(36).unwrap() + 13;
+    if digit >= 36 {
+        digit %= 36;
+        digit += 10;
+    }
     let mut new = char::from_digit(digit, 36).unwrap();
     if old.is_uppercase() {
         new = new.to_ascii_uppercase();
