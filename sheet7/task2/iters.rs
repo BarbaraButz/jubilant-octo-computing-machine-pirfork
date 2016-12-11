@@ -85,10 +85,11 @@ fn test_rot26() {
 }
 
 fn used_chars_count(x: &[&str]) -> u64 {
-    x.iter().
-        flat_map(|s| s.chars()).
-        filter(|c| !c.is_whitespace()).
-        collect::<HashSet<char>>().len() as u64
+    x.iter()
+        .flat_map(|s| s.chars())
+        .filter(|c| !c.is_whitespace())
+        .collect::<HashSet<char>>()
+        .len() as u64
 }
 
 #[test]
