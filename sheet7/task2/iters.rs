@@ -1,4 +1,6 @@
 use std::iter::once;
+use std::char;
+use std::ascii::AsciiExt;
 
 fn factorial(x: u8) -> u64 {
     (1..x as u64 + 1).product()
@@ -42,7 +44,20 @@ fn test_greatest_subsequencial_sum() {
 }
 
 fn rot13(secret: &str) -> String {
-    unimplemented!()
+    secret.chars().map(rotate).collect()
+}
+
+fn rotate(old: char) -> char {
+    let mut digit = (old.to_digit(36).unwrap() + 13) % 36;
+    if digit <= 9 {
+        digit += 10
+    };
+    let mut new = char::from_digit(digit, 36).unwrap();
+    if old.is_uppercase() {
+        new = new.to_ascii_uppercase();
+    }
+    new
+
 }
 
 #[test]
@@ -58,6 +73,15 @@ fn test_rot13() {
     assert_eq!(rot13("peter"), "crgre");
 }
 
+fn rot26(secret: &str) -> String {
+    return secret.to_string();
+}
+
+#[test]
+fn test_rot26() {
+    assert_eq!(rot26("Karoline"), "Karoline");
+}
+
 fn used_chars_count(x: &[&str]) -> u64 {
     unimplemented!()
 }
@@ -69,4 +93,7 @@ fn test_used_letters() {
     assert_eq!(used_chars_count(&["p e t e r", "barbara"]), 6);
 }
 
-fn main() {}
+fn main() {
+    println!("{:?}", rot13("BarbaraKaroline"));
+    println!("Hellooooo");
+}
