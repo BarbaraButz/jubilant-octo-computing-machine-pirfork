@@ -1,6 +1,7 @@
 use std::iter::once;
 use std::char;
 use std::ascii::AsciiExt;
+use std::collections::HashSet;
 
 fn factorial(x: u8) -> u64 {
     (1..x as u64 + 1).product()
@@ -84,16 +85,10 @@ fn test_rot26() {
 }
 
 fn used_chars_count(x: &[&str]) -> u64 {
-    let mut chars = x.iter().
-        map(|s| s.split_whitespace().collect::<String>()).
-        fold(String::new(), |mut acc, y| {
-            acc.push_str(&y);
-            acc
-        }).chars().collect::<Vec<char>>();
-        chars.sort();
-        chars.dedup();
-        println!("{:?}", chars);
-        chars.len() as u64
+    x.iter().
+        flat_map(|s| s.chars()).
+        filter(|c| !c.is_whitespace()).
+        collect::<HashSet<char>>().len() as u64
 }
 
 #[test]
