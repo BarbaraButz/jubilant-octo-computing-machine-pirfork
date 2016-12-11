@@ -10,7 +10,7 @@ struct FibIt {
 }
 
 impl FibIt {
-    fn new() -> FibIt {
+    fn new() -> Self {
         FibIt {
             n_minus_2: 0,
             n_minus_1: 1,
