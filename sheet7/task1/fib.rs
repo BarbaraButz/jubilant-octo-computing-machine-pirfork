@@ -22,8 +22,9 @@ impl Iterator for FibIt {
     type Item = u64;
     fn next(&mut self) -> Option<Self::Item> {
         let n = self.n_minus_1 + self.n_minus_2;
+        let help = self.n_minus_2;
         self.n_minus_2 = self.n_minus_1;
         self.n_minus_1 = n;
-        Some(n)
+        Some(help)
     }
 }
