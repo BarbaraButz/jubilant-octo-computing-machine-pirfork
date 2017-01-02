@@ -1,4 +1,4 @@
-use std::cmp::{Ordering, Ord};
+use std::cmp::{Ordering};
 
 fn main() {
     /*let mut arr = [
@@ -17,33 +17,32 @@ fn main() {
 }
 
 fn sort_by<C, F>(to_sort: &mut[C], mut func: F)
-    where F: FnMut(&C, &C) -> std::cmp::Ordering, C: Clone {
+    where F: FnMut(&C, &C) -> Ordering, C: Clone {
 
-        let len = to_sort.len();
-        for i in 0..len {
-            let mut index_min = i;
-            for j in i + 1..len {
-                match func(&to_sort[index_min], &to_sort[j]) {
-                    Ordering::Greater => index_min = j,
-                    _ => {},
-                }
+    let len = to_sort.len();
+    for i in 0..len {
+        let mut index_min = i;
+        for j in i + 1..len {
+            match func(&to_sort[index_min], &to_sort[j]) {
+                Ordering::Greater => index_min = j,
+                _ => {},
             }
-            let help = to_sort[i].clone();
-            to_sort[i] = to_sort[index_min].clone();
-            to_sort[index_min] = help;
-            //println!("Step: {:?}", &to_sort[..]);
         }
+        let help = to_sort[i].clone();
+        to_sort[i] = to_sort[index_min].clone();
+        to_sort[index_min] = help;
+    }
 
 }
 
 fn sort<C>(to_sort: &mut[C])
     where C: Clone + Ord {
-        sort_by(to_sort, |a, b| a.cmp(b));
+    sort_by(to_sort, |a, b| a.cmp(b));
 }
 
 fn sort_by_key<C, F>(to_sort: &mut[C], mut func: F)
     where F: FnMut(&C) -> C, C: Clone + Ord {
-        sort_by(to_sort, |a, b| func(a).cmp(&func(b)))
+    sort_by(to_sort, |a, b| func(a).cmp(&func(b)))
 }
 
 #[test]
