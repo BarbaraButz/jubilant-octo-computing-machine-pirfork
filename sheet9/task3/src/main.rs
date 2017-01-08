@@ -1,10 +1,10 @@
 use std::collections::HashMap;
 
 macro_rules! hash_map {
-    ( $( $x:expr => $y:expr ),* ) => {
+    ( $( $key:expr => $val:expr ),+ ) => {
         {
             let mut h = HashMap::new();
-            $( h.insert($x, $y); )*
+            $( h.insert($key, $val); )+
             h
         }
     };
