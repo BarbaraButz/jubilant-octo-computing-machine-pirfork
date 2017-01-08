@@ -1,27 +1,34 @@
-use std::fmt;
+
 
 struct Swagger<T>(pub T);
 
+macro_rules! swag_fmt_string {
+    (Display) => ("yolo {} swag");
+    (Debug) => ("yolo {:?} swag");
+    (Binary) => ("yolo {:b} swag");
+    (Octal) => ("yolo {:o} swag");
+    (LowerHex) => ("yolo {:x} swag");
+    (UpperHex) => ("yolo {:X} swag");
+    (LowerExp) => ("yolo {:e} swag");
+    (UpperExp) => ("yolo {:E} swag");
+}
+
 macro_rules! swag_fmt_impl {
-    ( $( $tr:path => $char:expr, )* ) => {$(
-        impl<T: $tr> $tr for Swagger<T> {
-            fn fmt(&self, f: &mut fmt::Formatter) -> Result<(), fmt::Error> {
-                write!(f, "yolo {:$char} swag", self.0)
+    ( $( $trait_:ident ),* ) => (
+        use std::fmt;
+        $(
+            impl<T: fmt::$trait_> fmt::$trait_ for Swagger<T> {
+                fn fmt(&self, f: &mut fmt::Formatter) -> Result<(), fmt::Error> {
+                    write!(f, swag_fmt_string!($trait_), self.0)
+                }
             }
-        }
-    )*}
+        )*
+    );
 }
 
-impl<T: fmt::Display> fmt::Display for Swagger<T> {
-    fn fmt(&self, f: &mut fmt::Formatter) -> Result<(), fmt::Error> {
-        write!(f, "yolo {} swag", self.0)
-    }
-}
 
-swag_fmt_impl!{
-    fmt::Debug => "?",
-    fmt::Binary => "b",
-}
+
+swag_fmt_impl!(Debug, Display, Binary, Octal, LowerHex, UpperHex, LowerExp, UpperExp);
 
 trait SwaggerExt: Sized {
     fn with_swag(self) -> Swagger<Self>;
@@ -34,12 +41,20 @@ impl<T> SwaggerExt for T {
 }
 
 fn main() {
-    let pi = 3.14;
+    let pi = 3.14.with_swag();
 
     println!("{}", pi);
-    println!("{}", Swagger(pi));
-    println!("{}", pi.with_swag());
+    println!("{:e}", pi);
+    println!("{:E}", pi);
 
     let arr = vec![1, 2, 3];
     println!("{:?}", arr.with_swag());
+
+    let answer = 42.with_swag();
+    println!("{:x}", answer);
+    println!("{:X}", answer);
+    println!("{:b}", answer);
+    println!("{:o}", answer);
+
+
 }
