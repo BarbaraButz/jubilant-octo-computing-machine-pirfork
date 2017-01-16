@@ -2,7 +2,7 @@ extern crate clap;
 extern crate rand;
 
 use clap::{App, Arg, ArgMatches, SubCommand};
-use rand::{Closed01, random};
+use rand::{Rng};
 
 fn main() {
 
@@ -11,7 +11,7 @@ fn main() {
             Arg::with_name("times")
             .long("times")
             .global(true)
-            .takes_value(true)
+            .default_value("1")
         )
         .subcommand(
             SubCommand::with_name("coin")
@@ -21,7 +21,7 @@ fn main() {
             .arg(
                 Arg::with_name("sides")
                 .long("sides")
-                .takes_value(true)
+                .default_value("6")
             )
         )
         .subcommand(
@@ -29,12 +29,12 @@ fn main() {
             .arg(
                 Arg::with_name("count")
                 .long("count")
-                .takes_value(true)
+                .default_value("1")
             )
         )
         .get_matches();
 
-        let times = match flip.value_of("times").unwrap_or("1").parse() {
+        let times = match flip.value_of("times").unwrap().parse() {
             Ok(x) => x,
             Err(_) => {
                 println!("{:?}", flip.usage());
@@ -59,7 +59,7 @@ fn main() {
 }
 
 fn flip_coin(_: &ArgMatches) {
-    let Closed01(side) = random::<Closed01<f32>>();
+    let side = rand::thread_rng().gen_range(0.0, 1.0);
     if side < 0.5 {
         println!("heads");
     } else {
@@ -67,10 +67,15 @@ fn flip_coin(_: &ArgMatches) {
     }
 }
 
-fn throw_dice(_: &ArgMatches) {
-    println!("dice");
+fn throw_dice(args: &ArgMatches) {
+    if let Ok(sides) = args.value_of("sides").unwrap().parse::<u64>() {
+        let side = rand::thread_rng().gen_range(1, sides + 1);
+        println!("{:?}", side);
+    }
 }
 
-fn choose(_: &ArgMatches) {
-    println!("choose");
+fn choose(args: &ArgMatches) {
+    if let Some(count) = args.subcommand_matches("count") {
+
+    }
 }
