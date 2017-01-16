@@ -31,6 +31,11 @@ fn main() {
                 .long("count")
                 .default_value("1")
             )
+            .arg(
+                Arg::with_name("list")
+                .required(true)
+                .multiple(true)
+            )
         )
         .get_matches();
 
@@ -68,14 +73,28 @@ fn flip_coin(_: &ArgMatches) {
 }
 
 fn throw_dice(args: &ArgMatches) {
-    if let Ok(sides) = args.value_of("sides").unwrap().parse::<u64>() {
+    if let Ok(sides) = args.value_of("sides").unwrap().parse::<usize>() {
         let side = rand::thread_rng().gen_range(1, sides + 1);
         println!("{:?}", side);
+    } else {
+        return;
     }
 }
 
 fn choose(args: &ArgMatches) {
-    if let Some(count) = args.subcommand_matches("count") {
+    if let Ok(mut count) = args.value_of("count").unwrap().parse::<usize>() {
+        if let Some(elements) = args.values_of("list") {
+            let mut list = elements.collect::<Vec<&str>>();
+            rand::thread_rng().shuffle(&mut list);
+            count = std::cmp::min(count, list.len());
+            for i in 0..count {
+                println!("{:?}", list.get(i).unwrap());
+            }
+        } else {
+            return;
+        }
 
+    } else {
+        return;
     }
 }
