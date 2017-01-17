@@ -64,8 +64,8 @@ fn main() {
 }
 
 fn flip_coin(_: &ArgMatches) {
-    let side = rand::thread_rng().gen_range(0.0, 1.0);
-    if side < 0.5 {
+    let side = rand::random::<bool>();
+    if side {
         println!("heads");
     } else {
         println!("tails");
@@ -95,6 +95,6 @@ fn choose(args: &ArgMatches) {
         }
 
     } else {
-        return;
+        unreachable!();
     }
 }
