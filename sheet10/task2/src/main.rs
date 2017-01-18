@@ -85,6 +85,6 @@ fn choose(args: &ArgMatches) {
     rand::thread_rng().shuffle(&mut list);
     count = std::cmp::min(count, list.len());
     for i in 0..count {
-        println!("{:?}", list.get(i).unwrap());
+        println!("{:?}", list[i]);
     }
 }
