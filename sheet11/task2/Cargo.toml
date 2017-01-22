@@ -1,0 +1,8 @@
+[package]
+name = "task2"
+version = "0.1.0"
+authors = ["Karoline Plum <karoline@plum-ge.de>"]
+
+[dependencies]
+clap = "2.20.0"
+rand = "0.3.15"

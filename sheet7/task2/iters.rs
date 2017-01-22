@@ -1,6 +1,7 @@
 use std::iter::once;
 use std::char;
 use std::ascii::AsciiExt;
+use std::collections::HashSet;
 
 fn factorial(x: u8) -> u64 {
     (1..x as u64 + 1).product()
@@ -48,10 +49,11 @@ fn rot13(secret: &str) -> String {
 }
 
 fn rotate(old: char) -> char {
-    let mut digit = (old.to_digit(36).unwrap() + 13) % 36;
-    if digit <= 9 {
-        digit += 10
-    };
+    let mut digit = old.to_digit(36).unwrap() + 13;
+    if digit >= 36 {
+        digit %= 36;
+        digit += 10;
+    }
     let mut new = char::from_digit(digit, 36).unwrap();
     if old.is_uppercase() {
         new = new.to_ascii_uppercase();
@@ -83,14 +85,11 @@ fn test_rot26() {
 }
 
 fn used_chars_count(x: &[&str]) -> u64 {
-    let mut chars = x.iter().map(|s| s.trim()).
-        fold(String::new(), |mut acc, y| {
-            acc.push_str(y);
-            acc
-        }).chars().collect::<Vec<char>>();
-        chars.sort();
-        chars.dedup();
-        chars.len() as u64
+    x.iter()
+        .flat_map(|s| s.chars())
+        .filter(|c| !c.is_whitespace())
+        .collect::<HashSet<char>>()
+        .len() as u64
 }
 
 #[test]
@@ -101,5 +100,5 @@ fn test_used_letters() {
 }
 
 fn main() {
-
+    used_chars_count(&["hi", "ih gitt"]);
 }
