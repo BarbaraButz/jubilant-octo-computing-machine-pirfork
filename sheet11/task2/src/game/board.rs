@@ -24,7 +24,18 @@ impl Board {
 
 impl fmt::Display for Board {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "test")
+        let mut s = String::new();
+        for i in 0..3 {
+            for j in 0..3 {
+                s.push(match self.0[i][j] {
+                    Field::Empty => '_',
+                    Field::Occupied(Symbol::O) => 'O',
+                    Field::Occupied(Symbol::X) => 'X',
+                });
+            }
+            s.push('\n');
+        }
+        s.fmt(f)
     }
 }
 

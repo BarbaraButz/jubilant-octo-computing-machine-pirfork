@@ -13,19 +13,19 @@ pub fn play(noughts: PlayerKind, crosses: PlayerKind) {
         symbol: Symbol::X,
         kind: crosses,
     };
+
     let mut board = Board::new();
     println!("{}", board);
 
     while !board.full() {
-        println!("");
         noughts.mark(&mut board);
-        println!("{}", board);
+        println!("\n{}", board);
+
         if board.full() {
             break;
         }
 
-        println!("");
         crosses.mark(&mut board);
-        println!("{}", board);
+        println!("\n{}", board);
     }
 }
