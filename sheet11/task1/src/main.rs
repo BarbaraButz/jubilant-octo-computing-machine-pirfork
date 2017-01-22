@@ -32,6 +32,9 @@ fn main() {
     let firstone = Rc::new(RcThing::new_empty("First one"));
     let secondone = Rc::new(RcThing::new_empty("Second one"));
     let thirdone = Rc::new(RcThing::new_empty("Third one"));
+    println!("Hello, I'm {:?}! \
+        Now the Compiler doesn't deem me unnecessary anymore \
+        and even Travis is happy!", thirdone.name);
     let help = secondone.clone();
     *firstone.pointer.borrow_mut() = Some(help);
     *secondone.pointer.borrow_mut() = Some(firstone);
