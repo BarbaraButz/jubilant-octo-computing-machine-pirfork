@@ -1,30 +1,40 @@
 use game::board::{Board, Symbol, Field};
 use rand;
+use rand::{Rng};
 
-trait Player {
-    fn mark(&self, board: &mut Board);
+#[derive(Copy, Clone, Debug, PartialEq)]
+pub enum PlayerKind {
+    Human,
+    StupidAI,
+    SmartAI,
 }
 
-struct Human(Symbol);
-struct StupidAI(Symbol);
-struct SmartAI(Symbol);
-// doppelter Code? Wie kann man das besser machen? Eventuell Symbol mit in move übergeben?
+#[derive(Copy, Clone, Debug, PartialEq)]
+pub struct Player {
+    symbol: Symbol,
+    kind: PlayerKind,
+}
 
-impl Player for Human {
-    fn mark(&self, board: &mut Board) {
+impl Player {
+    pub fn mark(&self, board: &mut Board) {
+        let (i, j) = match self.kind {
+            PlayerKind::Human => Self::human_move(board),
+            PlayerKind::StupidAI => Self::stupid_move(board),
+            PlayerKind::SmartAI => Self::smart_move(board),
+        };
+
+        board.0[i][j] = Field::Occupied(self.symbol);
+    }
+
+    fn human_move(board: &mut Board) -> (usize, usize) {
         unimplemented!();
     }
-}
 
-impl Player for StupidAI {
-    fn mark(&self, board: &mut Board) {
-        let (i, j) = rand::thread_rng().choose(&empty_indices()).unwrap();
-        board.0[i][j] = Field::Occupied(self.0);
+    fn stupid_move(board: &mut Board) -> (usize, usize) {
+        *(rand::thread_rng().choose(&board.empty_indices()).unwrap())
     }
-}
 
-impl Player for SmartAI {
-    fn mark(&self, board: &mut Board) {
+    fn smart_move(board: &mut Board) -> (usize, usize) {
         unimplemented!();
     }
 }
