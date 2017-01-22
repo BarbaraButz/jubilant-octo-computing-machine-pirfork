@@ -44,23 +44,11 @@ impl Player {
             buffer
         }
 
-        /// Reads a valid `usize` integer from the terminal/user.
-        fn read_usize() -> usize {
-            loop {
-                match read_string().parse() {
-                    Ok(res) => return res,
-                    Err(_) => println!("That was not an integer! Please try again!"),
-                }
-            }
-        }
-
         fn read_123() -> usize {
             loop {
-                let n = read_usize();
-                if n < 1 || n > 3 {
-                    println!("1, 2 or 3...");
-                } else {
-                    return n;
+                match read_string().parse() {
+                    Ok(x @ 1 ... 3) => return x,
+                    _ => println!("1, 2 or 3..."),
                 }
             }
         }
