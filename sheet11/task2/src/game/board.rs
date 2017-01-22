@@ -24,7 +24,7 @@ impl Board {
 
 impl fmt::Display for Board {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        unimplemented!();
+        write!(f, "test")
     }
 }
 

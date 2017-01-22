@@ -11,8 +11,8 @@ pub enum PlayerKind {
 
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Player {
-    symbol: Symbol,
-    kind: PlayerKind,
+    pub symbol: Symbol,
+    pub kind: PlayerKind,
 }
 
 impl Player {
