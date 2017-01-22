@@ -18,11 +18,9 @@ pub struct Player {
 
 impl Player {
     pub fn mark(&self, board: &mut Board) {
+        println!("{}, it's your turn! Please make your move.", self.symbol.name());
         let (i, j) = match self.kind {
-            PlayerKind::Human => {
-                println!("{}, it's your turn! Please specify your move.", self.symbol.name());
-                Self::human_move(board)
-            }
+            PlayerKind::Human => Self::human_move(board),
             PlayerKind::StupidAI => Self::stupid_move(board),
             PlayerKind::SmartAI => Self::smart_move(board),
         };
@@ -54,9 +52,9 @@ impl Player {
         }
 
         loop {
-            println!("Row: ");
+            println!("Row:");
             let i = read_123() - 1;
-            println!("Column: ");
+            println!("Column:");
             let j = read_123() - 1;
 
             if board.0[i][j] != Field::Empty {
@@ -71,7 +69,7 @@ impl Player {
         *(rand::thread_rng().choose(&board.empty_indices()).unwrap())
     }
 
-    fn smart_move(board: &mut Board) -> (usize, usize) {
+    fn smart_move(_: &mut Board) -> (usize, usize) {
         unimplemented!();
     }
 }
