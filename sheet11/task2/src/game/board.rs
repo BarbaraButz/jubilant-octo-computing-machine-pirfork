@@ -34,6 +34,15 @@ pub enum Symbol {
     X,
 }
 
+impl Symbol {
+    pub fn name(&self) -> String {
+        match *self {
+            Symbol::O => "Noughts".to_string(),
+            Symbol::X => "Crosses".to_string(),
+        }
+    }
+}
+
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub enum Field {
     Empty,
