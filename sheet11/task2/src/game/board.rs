@@ -8,13 +8,8 @@ impl Board {
     }
 
     pub fn empty_indices(&self) -> Vec<(usize, usize)> {
-        let mut indices = Vec::new();
-        for i in 0..3 {
-            for j in 0..3 {
-                indices.push((i, j));
-            }
-        }
-        indices.into_iter().filter(|&(i, j)| self.0[i][j] == Field::Empty).collect()
+        (0..3).flat_map(|i| (0..3).map(move |j| (i, j)))
+            .filter(|&(i, j)| self.0[i][j] == Field::Empty).collect()
     }
 
     pub fn full(&self) -> bool {
