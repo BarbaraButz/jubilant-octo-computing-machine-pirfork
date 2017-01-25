@@ -16,10 +16,6 @@ impl RcThing {
         }
 
     }
-
-    /*fn set_pointer(&mut self, to_point: RefMut<RefCell<Option<Rc<RcThing>>>>) {
-        self.pointer = *to_point;
-    }*/
 }
 
 impl Drop for RcThing {
